@@ -239,7 +239,11 @@ class AiotEntityBase(Entity):
         resp = await self.async_fetch_res_values()
         if resp:
             for x in resp:
-                await self.async_set_attr(x["resourceId"], x["value"], x["timeStamp"], write_ha_state=False)
+                try:
+                    await self.async_set_attr(x["resourceId"], x["value"], x["timeStamp"], write_ha_state=False)
+                except Exception as ex:
+                    _LOGGER.warning(x)
+                    _LOGGER.error(ex)
 
     async def async_set_resource(self, res_name, attr_value):
         """设置aiot resource的值"""
